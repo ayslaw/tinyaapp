@@ -12,13 +12,41 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
+
 function generateRandomString() {
   return Math.random().toString(36).substring(2, 8);
 };
 
+const findUserViaEmail = (email) => {
+  for(const userId in users) {
+    const user = users[userId];
+    if(user.email === email) {
+      return user;
+    }
+  }
+  return null;
+}
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
+
+app.get("/register", (req, res) => {
+  const templateVars = { display: users[req.cookies.user_id], urls: urlDatabase }; //Passing the user Object to the _header
+  res.render("registration", templateVars);
+}); 
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
@@ -33,14 +61,14 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { display: req.cookies.username, urls: urlDatabase };
+  const templateVars = { display: users[req.cookies.user_id], urls: urlDatabase }; //Passing the user Object to the _header
   console.log(templateVars);
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVarss = { display: req.cookies.username, urls: urlDatabase };
-  res.render("urls_new", templateVarss);
+  const templateVars = { display: users[req.cookies.user_id], urls: urlDatabase }; //Passing the user Object to the _header
+  res.render("urls_new", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -49,8 +77,23 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = {  display: req.cookies.username, shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
+  const templateVars = { display: users[req.cookies.user_id], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]}; //Passing the user Object to the _header
+  console.log(templateVars);
   res.render("urls_show", templateVars);
+});
+
+app.post("/register", (req, res) => {
+  let userID = generateRandomString();
+  if (!email || !password) {
+    return res.status(400).send("Please try again, your Email and Password fields can't be empty!");
+  }
+  const user = findUserViaEmail(email);
+  if(user) {
+    return res.status(400).send("Sorry, a user already exists with that Email, please use a different Email!")
+  }
+  users[userID] = {id: userID, email: req.body.email, password: req.body.password};
+  res.cookie("user_id", UserID); 
+  res.redirect("urls");
 });
 
 app.post("/urls", (req, res) => {
