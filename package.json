@@ -1,5 +1,5 @@
 {
-  "name": "tinyaapp",
+  "name": "tinyappp",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,16 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ayslaw/tinyaapp.git"
+    "url": "git+https://github.com/ayslaw/tinyappp.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ayslaw/tinyaapp/issues"
+    "url": "https://github.com/ayslaw/tinyappp/issues"
   },
-  "homepage": "https://github.com/ayslaw/tinyaapp#readme",
-  "dependencies": {
-    "express": "^4.17.3"
-  }
+  "homepage": "https://github.com/ayslaw/tinyappp#readme"
 }
